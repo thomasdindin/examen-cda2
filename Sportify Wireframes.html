@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sportify — Wireframes (Print)</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Caveat+Brush&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f5f2ee; font-family: 'Caveat', cursive; }
+
+  .page {
+    width: 297mm;
+    min-height: 210mm;
+    padding: 12mm 14mm;
+    background: #f5f2ee;
+    display: flex;
+    flex-direction: column;
+    break-after: page;
+    break-inside: avoid;
+  }
+
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8mm;
+    font-family: 'Caveat Brush', cursive;
+    font-size: 11pt;
+    color: #888;
+    border-bottom: 1.5px dashed #ccc;
+    padding-bottom: 4mm;
+  }
+  .page-header .role-tag {
+    font-size: 10pt;
+    padding: 2px 10px;
+    border-radius: 3px;
+    border: 2px solid currentColor;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+  }
+  .role-visiteur { color: #555; }
+  .role-client   { color: #1a1a1a; }
+  .role-coach    { color: #f5a623; }
+  .role-admin    { color: #e84040; }
+
+  /* ---- Wireframe atoms ---- */
+  .wf { font-family: 'Caveat', cursive; color: #1a1a1a; }
+  .wf-nav {
+    display: flex; align-items: center; gap: 14px;
+    border-bottom: 2px solid #1a1a1a;
+    padding: 7px 14px; background: #fff;
+  }
+  .wf-logo {
+    font-family: 'Caveat Brush', cursive;
+    font-size: 14pt; font-weight: 700;
+    border: 2px solid #1a1a1a; padding: 1px 7px;
+    background: #1a1a1a; color: #fff;
+  }
+  .wf-nav-links { display: flex; gap: 10px; font-size: 10pt; flex: 1; }
+  .wf-nav-link { padding: 2px 7px; border-radius: 3px; }
+  .wf-nav-link.active { background: #1a1a1a; color: #fff; }
+  .wf-nav-right { display: flex; gap: 7px; margin-left: auto; font-size: 9pt; align-items: center; }
+
+  .wf-btn {
+    display: inline-block; padding: 4px 10px;
+    border: 2px solid #1a1a1a; border-radius: 4px;
+    font-family: 'Caveat', cursive; font-size: 9pt;
+    white-space: nowrap;
+  }
+  .wf-btn.primary { background: #1a1a1a; color: #fff; }
+  .wf-btn.accent  { background: #e84040; color: #fff; border-color: #e84040; }
+  .wf-btn.outline { background: #fff; }
+  .wf-btn.ghost   { background: transparent; border-color: #888; color: #666; }
+  .wf-btn.warn    { background: #f5a623; border-color: #f5a623; color: #fff; }
+
+  .wf-hero {
+    padding: 18px 18px 14px;
+    background: repeating-linear-gradient(-45deg,#f0ede9 0,#f0ede9 4px,#e8e4e0 4px,#e8e4e0 8px);
+    border-bottom: 2px solid #1a1a1a;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .wf-hero h1 { font-size: 20pt; font-weight: 700; line-height: 1.1; }
+  .wf-hero p  { font-size: 9pt; color: #555; margin-top: 4px; }
+  .wf-hero-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+  .wf-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+
+  .wf-section-title {
+    font-size: 11pt; font-weight: 700;
+    border-bottom: 2px dashed #1a1a1a;
+    padding-bottom: 3px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .wf-section-title span { font-size: 9pt; color: #e84040; font-weight: 600; }
+
+  .wf-grid { display: grid; gap: 8px; }
+  .wf-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .wf-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .wf-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  .wf-card {
+    border: 2px solid #1a1a1a; border-radius: 5px;
+    padding: 9px 11px; background: #fff;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .wf-card.dark   { background: #1a1a1a; color: #fff; }
+  .wf-card.accent { background: #e84040; color: #fff; border-color: #e84040; }
+  .wf-card-label  { font-size: 8pt; color: #888; margin-bottom: 2px; }
+  .wf-card.dark .wf-card-label, .wf-card.accent .wf-card-label { color: rgba(255,255,255,0.65); }
+  .wf-card-value  { font-size: 22pt; font-weight: 700; line-height: 1; }
+  .wf-card-sub    { font-size: 8pt; color: #aaa; margin-top: 2px; }
+  .wf-card.dark .wf-card-sub { color: rgba(255,255,255,0.5); }
+
+  .wf-course-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border: 1.5px solid #ddd; border-radius: 4px;
+    background: #fff; margin-bottom: 5px;
+  }
+  .wf-course-time  { font-size: 9pt; color: #888; min-width: 38px; }
+  .wf-course-name  { font-size: 10pt; font-weight: 600; flex: 1; }
+  .wf-course-badge {
+    font-size: 8pt; padding: 1px 6px;
+    border: 1.5px solid currentColor; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .wf-course-badge.full     { color: #e84040; }
+  .wf-course-badge.open     { color: #27ae60; }
+  .wf-course-badge.reserved { color: #f5a623; }
+
+  .wf-bar-row { margin-bottom: 7px; }
+  .wf-bar-label { display: flex; justify-content: space-between; font-size: 9pt; margin-bottom: 2px; }
+  .wf-bar-track { height: 7px; background: #e8e4e0; border-radius: 3px; overflow: hidden;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .wf-bar-fill  { height: 100%; border-radius: 3px; background: #e84040;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .wf-student-row {
+    display: flex; align-items: center; gap: 7px;
+    padding: 5px 0; border-bottom: 1px dashed #ddd;
+  }
+  .wf-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid #1a1a1a; background: #e8e4e0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 700;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .wf-online-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #27ae60; margin-left: auto;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  .wf-annotation {
+    font-size: 9pt; color: #888; font-style: italic;
+    border-left: 3px solid #f5a623; padding-left: 7px; margin-top: 5px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  .screen-box {
+    background: #fff;
+    border: 2px solid #1a1a1a;
+    border-radius: 6px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    body { background: #f5f2ee; }
+    .page { break-after: page; width: 297mm; min-height: 210mm; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+/* =========================================================
+   SCREEN 1 — VISITEUR
+   ========================================================= */
+function ScreenVisiteur() {
+  return (
+    <div className="screen-box">
+      <div className="wf-nav">
+        <span className="wf-logo">SPORTIFY</span>
+        <div className="wf-nav-links">
+          <span className="wf-nav-link">Séances</span>
+          <span className="wf-nav-link">Coachs</span>
+          <span className="wf-nav-link">Tarifs</span>
+        </div>
+        <div className="wf-nav-right">
+          <span className="wf-btn outline">Se connecter</span>
+          <span className="wf-btn accent">S'inscrire</span>
+        </div>
+      </div>
+      <div className="wf-hero" style={{textAlign:'center', padding:'22px 40px 18px'}}>
+        <h1 style={{fontSize:'22pt'}}>Réservez vos cours, atteignez vos objectifs.</h1>
+        <p style={{fontSize:'10pt', marginTop:6, color:'#666'}}>Trouvez votre coach, choisissez vos séances, suivez vos progrès.</p>
+        <div className="wf-hero-actions" style={{justifyContent:'center', marginTop:12, gap:12}}>
+          <span className="wf-btn accent" style={{fontSize:'11pt', padding:'8px 20px'}}>S'inscrire gratuitement</span>
+          <span className="wf-btn outline" style={{fontSize:'11pt', padding:'8px 20px'}}>Voir les cours</span>
+        </div>
+      </div>
+      <div style={{display:'flex', borderTop:'2px solid #1a1a1a', borderBottom:'2px solid #1a1a1a'}}>
+        {['📅 Réservation en 1 clic','🏆 Coachs certifiés','📊 Suivi de progression'].map((f,i)=>(
+          <div key={i} style={{flex:1, padding:'10px 14px', borderLeft:i>0?'2px solid #1a1a1a':'none', textAlign:'center', fontSize:'10pt', fontWeight:600}}>{f}</div>
+        ))}
+      </div>
+      <div className="wf-body">
+        <div className="wf-section-title">Prochaines séances disponibles <span>Voir tout →</span></div>
+        {[
+          {time:'09:00', name:'Cardio Training', coach:'Julien M.', spots:'4 places'},
+          {time:'11:30', name:'Musculation SBD', coach:'Sarah L.', spots:'2 places'},
+          {time:'18:00', name:'Mobilité & Stretching', coach:'Marc T.', spots:'8 places'},
+        ].map((c,i)=>(
+          <div key={i} className="wf-course-item">
+            <span className="wf-course-time">{c.time}</span>
+            <span className="wf-course-name">{c.name}</span>
+            <span style={{fontSize:'8pt', color:'#888'}}>Coach : {c.coach}</span>
+            <span style={{fontSize:'8pt', color:'#27ae60', marginLeft:6}}>{c.spots}</span>
+            <span className="wf-btn ghost" style={{marginLeft:'auto', fontSize:'8pt', padding:'3px 8px', color:'#888', borderStyle:'dashed'}}>🔒 Connectez-vous pour réserver</span>
+          </div>
+        ))}
+        <p className="wf-annotation">← bouton réservation remplacé par une invitation à se connecter</p>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   SCREEN 2 — CLIENT
+   ========================================================= */
+function ScreenClient() {
+  return (
+    <div className="screen-box">
+      <div className="wf-nav">
+        <span className="wf-logo">SPORTIFY</span>
+        <div className="wf-nav-links">
+          <span className="wf-nav-link active">Dashboard</span>
+          <span className="wf-nav-link">Séances</span>
+          <span className="wf-nav-link">Mes réservations</span>
+        </div>
+        <div className="wf-nav-right">
+          <span style={{fontSize:'9pt', border:'2px solid #1a1a1a', padding:'1px 7px', borderRadius:4}}>CLIENT</span>
+          <span style={{fontSize:'9pt'}}>Marie D.</span>
+          <span className="wf-btn ghost" style={{fontSize:'8pt'}}>Déconnexion</span>
+        </div>
+      </div>
+      <div className="wf-hero" style={{padding:'14px 18px 12px'}}>
+        <h1 style={{fontSize:'18pt'}}>Bonjour Marie, prête pour aujourd'hui ?</h1>
+        <p style={{fontSize:'9pt', marginTop:3, color:'#666'}}>Retrouvez vos réservations, séances du jour et à venir.</p>
+        <div className="wf-hero-actions">
+          <span className="wf-btn accent">Réserver une séance</span>
+          <span className="wf-btn outline">Voir mon historique</span>
+        </div>
+      </div>
+      <div className="wf-body">
+        <div className="wf-grid wf-grid-4">
+          {[
+            {label:'Réservations actives', val:'3', sub:'cette semaine', cls:''},
+            {label:'Séances ce mois', val:'12', sub:'+2 vs dernier mois', cls:'dark'},
+            {label:'Prochain cours', val:'18h00', sub:'Cardio Training', cls:''},
+            {label:'Objectif semaine', val:'75%', sub:'3/4 séances', cls:'accent'},
+          ].map((k,i)=>(
+            <div key={i} className={`wf-card ${k.cls}`}>
+              <div className="wf-card-label">{k.label}</div>
+              <div className="wf-card-value" style={{fontSize:'18pt'}}>{k.val}</div>
+              <div className="wf-card-sub">{k.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div className="wf-grid wf-grid-2">
+          <div>
+            <div className="wf-section-title">Cours du jour <span>Lundi 27 avril</span></div>
+            {[
+              {time:'09:00', name:'Cardio Training', badge:'reserved', label:'Réservé'},
+              {time:'12:00', name:'Pause déj. (fermé)', badge:'full', label:'Fermé'},
+              {time:'18:00', name:'Mobilité', badge:'open', label:'Places dispo'},
+            ].map((c,i)=>(
+              <div key={i} className="wf-course-item">
+                <span className="wf-course-time">{c.time}</span>
+                <span className="wf-course-name">{c.name}</span>
+                <span className={`wf-course-badge ${c.badge}`}>{c.label}</span>
+                {c.badge === 'open' && <span className="wf-btn accent" style={{fontSize:'8pt', padding:'2px 7px', marginLeft:4}}>Réserver</span>}
+              </div>
+            ))}
+          </div>
+          <div>
+            <div className="wf-section-title">Mes prochaines réservations <span>Voir tout →</span></div>
+            {[
+              {date:'Mer 29', name:'Musculation SBD', coach:'Julien M.'},
+              {date:'Ven 01', name:'Cardio Training', coach:'Sarah L.'},
+              {date:'Lun 04', name:'Prépa physique', coach:'Marc T.'},
+            ].map((r,i)=>(
+              <div key={i} className="wf-course-item">
+                <span className="wf-course-time" style={{color:'#e84040', fontWeight:700}}>{r.date}</span>
+                <span className="wf-course-name">{r.name}</span>
+                <span style={{fontSize:'8pt', color:'#888'}}>{r.coach}</span>
+                <span className="wf-btn ghost" style={{fontSize:'8pt', padding:'2px 6px', marginLeft:4, color:'#e84040', borderColor:'#e84040'}}>Annuler</span>
+              </div>
+            ))}
+            <p className="wf-annotation">L'utilisateur peut annuler jusqu'à X heures avant</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   SCREEN 3 — COACH
+   ========================================================= */
+function ScreenCoach() {
+  return (
+    <div className="screen-box">
+      <div className="wf-nav">
+        <span className="wf-logo">SPORTIFY</span>
+        <div className="wf-nav-links">
+          <span className="wf-nav-link active">Dashboard</span>
+          <span className="wf-nav-link">Mes séances</span>
+          <span className="wf-nav-link">Mes élèves</span>
+        </div>
+        <div className="wf-nav-right">
+          <span style={{fontSize:'9pt', border:'2px solid #f5a623', padding:'1px 7px', borderRadius:4, color:'#f5a623'}}>COACH</span>
+          <span style={{fontSize:'9pt'}}>Julien M.</span>
+          <span className="wf-btn ghost" style={{fontSize:'8pt'}}>Déconnexion</span>
+        </div>
+      </div>
+      <div className="wf-hero" style={{padding:'14px 18px 12px', background:'repeating-linear-gradient(-45deg,#fdf8f0 0,#fdf8f0 4px,#f5eedd 4px,#f5eedd 8px)'}}>
+        <h1 style={{fontSize:'18pt'}}>Bonjour Julien, voici vos séances.</h1>
+        <p style={{fontSize:'9pt', marginTop:3, color:'#666'}}>Gérez vos cours du jour, à venir, et vos élèves connectés.</p>
+        <div className="wf-hero-actions">
+          <span className="wf-btn warn">+ Créer une séance</span>
+          <span className="wf-btn outline">Gérer mes séances</span>
+        </div>
+      </div>
+      <div className="wf-body">
+        <div className="wf-grid wf-grid-3">
+          <div className="wf-card"><div className="wf-card-label">Séances aujourd'hui</div><div className="wf-card-value" style={{fontSize:'18pt'}}>2</div><div className="wf-card-sub">09:00 et 18:00</div></div>
+          <div className="wf-card dark"><div className="wf-card-label">Élèves inscrits</div><div className="wf-card-value" style={{fontSize:'18pt'}}>24</div><div className="wf-card-sub">total portefeuille</div></div>
+          <div className="wf-card" style={{borderColor:'#f5a623'}}><div className="wf-card-label">Taux de remplissage</div><div className="wf-card-value" style={{fontSize:'18pt', color:'#f5a623'}}>78%</div><div className="wf-card-sub">cette semaine</div></div>
+        </div>
+        <div className="wf-grid wf-grid-2">
+          <div>
+            <div className="wf-section-title">Mes cours du jour</div>
+            {[{time:'09:00', name:'Cardio Training', s:8, m:10},{time:'18:00', name:'Musculation SBD', s:5, m:8}].map((c,i)=>(
+              <div key={i} className="wf-course-item" style={{flexDirection:'column', alignItems:'flex-start', gap:4}}>
+                <div style={{display:'flex', width:'100%', alignItems:'center', gap:7}}>
+                  <span className="wf-course-time">{c.time}</span>
+                  <span className="wf-course-name">{c.name}</span>
+                  <span style={{fontSize:'8pt', marginLeft:'auto', color:'#888'}}>{c.s}/{c.m} élèves</span>
+                </div>
+                <div style={{width:'100%'}}><div className="wf-bar-track"><div className="wf-bar-fill" style={{width:`${(c.s/c.m)*100}%`, background:'#f5a623'}}></div></div></div>
+                <div style={{display:'flex', gap:5}}>
+                  <span className="wf-btn ghost" style={{fontSize:'8pt', padding:'1px 7px'}}>Voir élèves</span>
+                  <span className="wf-btn ghost" style={{fontSize:'8pt', padding:'1px 7px'}}>Modifier</span>
+                </div>
+              </div>
+            ))}
+            <div className="wf-section-title" style={{marginTop:10}}>Prochaines séances <span>Voir tout →</span></div>
+            {[{date:'Mer 29', name:'Cardio Training', s:'6/10'},{date:'Ven 01', name:'Prépa physique', s:'3/8'}].map((c,i)=>(
+              <div key={i} className="wf-course-item">
+                <span className="wf-course-time" style={{color:'#f5a623', fontWeight:700}}>{c.date}</span>
+                <span className="wf-course-name">{c.name}</span>
+                <span style={{fontSize:'8pt', color:'#888'}}>{c.s}</span>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div className="wf-section-title">Élèves inscrits aux séances <span style={{color:'#27ae60'}}>● En ligne</span></div>
+            {[
+              {i:'MD', n:'Marie D.', c:'Cardio 09:00', o:true},
+              {i:'PL', n:'Pierre L.', c:'Cardio 09:00', o:true},
+              {i:'AS', n:'Alice S.', c:'SBD 18:00', o:false},
+              {i:'TM', n:'Thomas M.', c:'SBD 18:00', o:true},
+              {i:'CE', n:'Chloé E.', c:'SBD 18:00', o:false},
+            ].map((s,idx)=>(
+              <div key={idx} className="wf-student-row">
+                <div className="wf-avatar">{s.i}</div>
+                <div><div style={{fontSize:'10pt', fontWeight:600}}>{s.n}</div><div style={{fontSize:'8pt', color:'#888'}}>{s.c}</div></div>
+                {s.o && <div className="wf-online-dot"></div>}
+              </div>
+            ))}
+            <p className="wf-annotation" style={{marginTop:6}}>● vert = élève connecté sur l'app</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   SCREEN 4 — ADMIN
+   ========================================================= */
+function ScreenAdmin() {
+  return (
+    <div className="screen-box">
+      <div className="wf-nav">
+        <span className="wf-logo">SPORTIFY <span style={{fontSize:'7pt', background:'#e84040', color:'#fff', padding:'1px 5px', borderRadius:2, verticalAlign:'middle'}}>PRO</span></span>
+        <div className="wf-nav-links">
+          <span className="wf-nav-link active">Dashboard</span>
+          <span className="wf-nav-link">Séances</span>
+          <span className="wf-nav-link" style={{color:'#e84040', border:'1.5px solid #e84040', borderRadius:3, padding:'1px 7px'}}>+ Créer</span>
+          <span className="wf-nav-link">Mes séances</span>
+          <span className="wf-nav-link">Supervision</span>
+        </div>
+        <div className="wf-nav-right">
+          <span style={{fontSize:'9pt', border:'2px solid #e84040', padding:'1px 7px', borderRadius:4, color:'#e84040'}}>ADMIN</span>
+          <span style={{fontSize:'9pt'}}>Admin</span>
+          <span className="wf-btn ghost" style={{fontSize:'8pt'}}>Déconnexion</span>
+        </div>
+      </div>
+      <div className="wf-hero" style={{padding:'14px 18px 12px', background:'#1a1a1a', color:'#fff'}}>
+        <h1 style={{fontSize:'20pt', color:'#fff'}}>Bonjour Admin, voici votre activité.</h1>
+        <p style={{fontSize:'9pt', marginTop:3, color:'rgba(255,255,255,0.55)'}}>Vue globale des utilisateurs, réservations et taux de remplissage.</p>
+        <div className="wf-hero-actions">
+          <span className="wf-btn accent">Créer une séance</span>
+          <span className="wf-btn outline" style={{color:'#fff', borderColor:'#fff'}}>Gérer les séances</span>
+        </div>
+      </div>
+      <div className="wf-body">
+        <div className="wf-grid wf-grid-4">
+          {[
+            {label:'Utilisateurs', val:'4', sub:'2 clients · 1 coach', cls:'dark'},
+            {label:'Réservations', val:'7', sub:'confirmées au total', cls:'dark'},
+            {label:'Séances à venir', val:'6', sub:"1 aujourd'hui", cls:'dark'},
+            {label:'Remplissage', val:'14%', sub:'capacité réservée', cls:'accent'},
+          ].map((k,i)=>(
+            <div key={i} className={`wf-card ${k.cls}`}>
+              <div className="wf-card-label">{k.label}</div>
+              <div className="wf-card-value" style={{fontSize:'18pt'}}>{k.val}</div>
+              <div className="wf-card-sub">{k.sub}</div>
+            </div>
+          ))}
+        </div>
+        <div className="wf-grid wf-grid-2">
+          <div className="wf-card">
+            <div className="wf-section-title" style={{marginBottom:10}}>Répartition utilisateurs <span>Voir tout</span></div>
+            {[{l:'Clients',c:2,p:50},{l:'Coachs',c:1,p:25},{l:'Admins',c:1,p:25}].map((u,i)=>(
+              <div key={i} className="wf-bar-row">
+                <div className="wf-bar-label"><span>{u.l}</span><span>{u.c}</span></div>
+                <div className="wf-bar-track"><div className="wf-bar-fill" style={{width:`${u.p}%`, background:i===1?'#f5a623':'#e84040', opacity:i===2?0.5:1}}></div></div>
+              </div>
+            ))}
+          </div>
+          <div className="wf-card">
+            <div className="wf-section-title" style={{marginBottom:10}}>Remplissage des prochaines séances <span>Superviser</span></div>
+            {[{n:'SBD',p:33},{n:'Coaching musculation',p:13},{n:'Cardio training',p:8},{n:'Mobilité',p:10},{n:'Préparation physique',p:17}].map((s,i)=>(
+              <div key={i} className="wf-bar-row">
+                <div className="wf-bar-label"><span>{s.n}</span><span>{s.p}%</span></div>
+                <div className="wf-bar-track"><div className="wf-bar-fill" style={{width:`${s.p*2}%`}}></div></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="wf-section-title">Actions rapides</div>
+          <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
+            <span className="wf-btn primary">Gérer les utilisateurs</span>
+            <span className="wf-btn outline">Exporter les stats</span>
+            <span className="wf-btn outline">Voir toutes les réservations</span>
+            <span className="wf-btn ghost">Paramètres</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   PAGE WRAPPER
+   ========================================================= */
+function Page({role, label, cls, children}) {
+  return (
+    <div className="page">
+      <div className="page-header">
+        <span style={{fontFamily:"'Caveat Brush', cursive", fontSize:'13pt'}}>Sportify — Wireframes</span>
+        <span className={`role-tag ${cls}`}>{label}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <Page label="Visiteur (non connecté)" cls="role-visiteur"><ScreenVisiteur /></Page>
+      <Page label="Client (connecté)" cls="role-client"><ScreenClient /></Page>
+      <Page label="Coach (connecté)" cls="role-coach"><ScreenCoach /></Page>
+      <Page label="Admin (connecté)" cls="role-admin"><ScreenAdmin /></Page>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+// Auto-print after fonts + Babel settle
+document.fonts.ready.then(() => {
+  setTimeout(() => window.print(), 500);
+});
+</script>
+</body>
+</html>
