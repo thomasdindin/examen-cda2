@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: sportify-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: sportify
+      POSTGRES_PASSWORD: sportify
+      POSTGRES_DB: sportify_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - sportify_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  sportify_postgres_data:

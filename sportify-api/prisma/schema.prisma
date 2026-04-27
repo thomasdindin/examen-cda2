@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COACH
+  CLIENT
+}
+
+enum ReservationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  firstname    String
+  lastname     String
+  role         Role          @default(CLIENT)
+  enabled      Boolean       @default(true)
+
+  coachSessions Session[]    @relation("CoachSessions")
+  reservations  Reservation[]
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Session {
+  id              String        @id @default(uuid())
+  title           String
+  description     String?
+  startAt         DateTime
+  endAt           DateTime
+  maxParticipants Int
+
+  coachId         String
+  coach           User          @relation("CoachSessions", fields: [coachId], references: [id])
+
+  reservations    Reservation[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Reservation {
+  id         String             @id @default(uuid())
+  userId     String
+  sessionId  String
+  status     ReservationStatus  @default(CONFIRMED)
+
+  user       User               @relation(fields: [userId], references: [id])
+  session    Session            @relation(fields: [sessionId], references: [id])
+
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@unique([userId, sessionId])
+}
