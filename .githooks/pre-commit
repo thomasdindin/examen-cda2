@@ -1,0 +1,55 @@
+#!/bin/sh
+# Hook pre-commit : bloque le commit si des tests échouent.
+# Activation (une seule fois) : git config core.hooksPath .githooks
+#
+# Prérequis : avoir installé les dépendances localement.
+#   cd sportify-api && npm install
+#   cd sportify-front && npm install
+
+SKIP=0
+
+echo ""
+echo "▶  Pre-commit — lancement des tests..."
+
+# ── Backend (NestJS / Jest) ──────────────────────────────────────────────────
+echo ""
+echo "── Backend (NestJS / Jest) ──"
+
+if [ ! -d "sportify-api/node_modules" ]; then
+  echo "⚠️  sportify-api/node_modules absent — tests ignorés."
+  echo "    Installez les dépendances : cd sportify-api && npm install"
+  SKIP=1
+else
+  (cd sportify-api && npm test -- --runInBand --forceExit --passWithNoTests)
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌  Tests backend échoués — commit bloqué."
+    exit 1
+  fi
+fi
+
+# ── Frontend (Angular / Vitest) ──────────────────────────────────────────────
+echo ""
+echo "── Frontend (Angular / Vitest) ──"
+
+if [ ! -d "sportify-front/node_modules" ]; then
+  echo "⚠️  sportify-front/node_modules absent — tests ignorés."
+  echo "    Installez les dépendances : cd sportify-front && npm install"
+  SKIP=1
+else
+  (cd sportify-front && npm test -- --watch=false)
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌  Tests frontend échoués — commit bloqué."
+    exit 1
+  fi
+fi
+
+echo ""
+if [ $SKIP -eq 1 ]; then
+  echo "⚠️  Commit autorisé mais certains tests n'ont pas été exécutés."
+else
+  echo "✅  Tous les tests passent — commit autorisé."
+fi
+echo ""
+exit 0
