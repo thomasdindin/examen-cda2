@@ -1,6 +1,7 @@
 <div class="dashboard-page">
   <section class="dashboard-hero" aria-labelledby="dashboard-title">
-    <div>
+
+    <div class="hero-content">
       <p class="eyebrow">Sportify Pro</p>
       <h1 id="dashboard-title">
         @if (isLoggedIn()) {
@@ -20,20 +21,25 @@
           Sportify Pro centralise les cours, les coachs, les réservations et le suivi des participants dans une interface claire.
         }
       </p>
+
+      <div class="hero-actions" aria-label="Actions principales">
+        @if (isClient()) {
+          <a routerLink="/sessions" class="btn btn--primary">Réserver une séance</a>
+          <a routerLink="/my-reservations" class="btn btn--secondary">Mes réservations</a>
+        } @else if (isCoach() || isAdmin()) {
+          <a routerLink="/sessions/new" class="btn btn--primary">Créer une séance</a>
+          <a routerLink="/my-sessions" class="btn btn--secondary">Gérer les séances</a>
+        } @else {
+          <a routerLink="/login" class="btn btn--primary">Se connecter</a>
+          <a routerLink="/register" class="btn btn--secondary">Créer un compte</a>
+        }
+      </div>
     </div>
 
-    <div class="hero-actions" aria-label="Actions principales">
-      @if (isClient()) {
-        <a routerLink="/sessions" class="btn btn--primary">Réserver une séance</a>
-        <a routerLink="/my-reservations" class="btn btn--secondary">Mes réservations</a>
-      } @else if (isCoach() || isAdmin()) {
-        <a routerLink="/sessions/new" class="btn btn--primary">Créer une séance</a>
-        <a routerLink="/my-sessions" class="btn btn--secondary">Gérer les séances</a>
-      } @else {
-        <a routerLink="/login" class="btn btn--primary">Se connecter</a>
-        <a routerLink="/register" class="btn btn--secondary">Créer un compte</a>
-      }
+    <div class="hero-visual" aria-hidden="true">
+      <img ngSrc="/hero.png" alt="" fill priority />
     </div>
+
   </section>
 
   @if (successMessage()) {
@@ -57,7 +63,7 @@
           <span class="date-chip">Pour les salles, coachs et pratiquants</span>
           <h2>Un espace unique pour publier, réserver et suivre les séances.</h2>
           <p>
-            Les clients trouvent les créneaux disponibles, les coachs suivent leurs élèves, et les administrateurs gardent une vue claire sur l’activité.
+            Les clients trouvent les créneaux disponibles, les coachs suivent leurs élèves, et les administrateurs gardent une vue claire sur l'activité.
           </p>
           <div class="guest-actions">
             <a routerLink="/register" class="btn btn--primary">Démarrer</a>
@@ -75,7 +81,7 @@
         </article>
         <article class="panel guest-card">
           <h3>Administrateurs</h3>
-          <p>Pilotez les utilisateurs, les réservations et l’activité globale avec des indicateurs rapides.</p>
+          <p>Pilotez les utilisateurs, les réservations et l'activité globale avec des indicateurs rapides.</p>
         </article>
       </section>
     } @else if (isAdmin()) {

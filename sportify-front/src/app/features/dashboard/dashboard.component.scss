@@ -4,13 +4,48 @@
   padding: 2rem 0;
 }
 
+// ── Hero ──────────────────────────────────────────────────────────────────────
+
 .dashboard-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 2rem;
-  padding: 2rem 0;
+  grid-template-columns: 1fr 440px;
+  align-items: stretch;
+  gap: 3rem;
+  padding: 2.5rem 0 2rem;
   border-bottom: 1px solid var(--border);
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding: 0.5rem 0;
+}
+
+.hero-visual {
+  position: relative;
+  min-height: 300px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+
+  // gradient: fondu à gauche pour coller au fond de page
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, var(--bg) 0%, transparent 35%),
+      linear-gradient(to top, rgba(11, 10, 10, 0.55) 0%, transparent 28%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  img {
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.82) saturate(0.88);
+  }
 }
 
 .eyebrow {
@@ -38,12 +73,16 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  margin-top: 1.75rem;
 }
+
+// ── Alerts ────────────────────────────────────────────────────────────────────
 
 .alert {
   margin-top: 1rem;
 }
+
+// ── Metrics ───────────────────────────────────────────────────────────────────
 
 .metrics-grid {
   display: grid;
@@ -105,6 +144,8 @@
   }
 }
 
+// ── Grids ─────────────────────────────────────────────────────────────────────
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -117,6 +158,8 @@
   gap: 1rem;
   margin-top: 1.5rem;
 }
+
+// ── Panels ────────────────────────────────────────────────────────────────────
 
 .panel {
   padding: 1.25rem;
@@ -179,6 +222,8 @@
     text-decoration: none;
   }
 }
+
+// ── Charts & lists ────────────────────────────────────────────────────────────
 
 .chart-list,
 .session-stack,
@@ -320,20 +365,36 @@
   font-size: 0.92rem;
 }
 
-@media (max-width: 900px) {
-  .dashboard-hero,
-  .dashboard-grid,
-  .guest-grid,
-  .booking-grid {
+// ── Responsive ────────────────────────────────────────────────────────────────
+
+@media (max-width: 1000px) {
+  .dashboard-hero {
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 780px) {
+  .dashboard-hero {
     grid-template-columns: 1fr;
   }
 
-  .hero-actions {
-    justify-content: flex-start;
+  .hero-visual {
+    display: none;
   }
 
   .dashboard-hero h1 {
     font-size: 3rem;
+  }
+
+  .dashboard-grid,
+  .guest-grid,
+  .booking-grid {
+    grid-template-columns: 1fr;
   }
 
   .metrics-grid {
