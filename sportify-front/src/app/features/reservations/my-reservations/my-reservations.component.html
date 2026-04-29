@@ -1,0 +1,67 @@
+<div class="page">
+  <header class="page-header">
+    <h1 class="page-title">Mes <span>réservations</span></h1>
+    <p class="page-subtitle">Retrouvez toutes vos séances réservées</p>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert" aria-live="polite" style="margin-bottom: 1.5rem">
+      {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading" aria-label="Chargement des réservations">Chargement...</div>
+  } @else if (reservations().length === 0) {
+    <div class="empty-state" role="status">
+      <app-icon name="clipboard" class="empty-icon" />
+      <p>Vous n'avez aucune réservation.</p>
+    </div>
+  } @else {
+    <ul class="reservations-list" role="list" aria-label="Mes réservations">
+      @for (reservation of reservations(); track reservation.id) {
+        <li class="reservation-item" [class.reservation-item--cancelled]="reservation.status === 'CANCELLED'">
+          <div class="reservation-info">
+            <div class="reservation-header">
+              <h2 class="reservation-title">{{ reservation.session?.title }}</h2>
+              <span
+                class="badge"
+                [class.badge--confirmed]="reservation.status === 'CONFIRMED'"
+                [class.badge--cancelled]="reservation.status === 'CANCELLED'"
+                [attr.aria-label]="'Statut : ' + (reservation.status === 'CONFIRMED' ? 'Confirmé' : 'Annulé')"
+              >
+                {{ reservation.status === 'CONFIRMED' ? 'Confirmé' : 'Annulé' }}
+              </span>
+            </div>
+
+            @if (reservation.session) {
+              <div class="reservation-meta">
+                <span>
+                  <app-icon name="calendar" />
+                  <time [attr.datetime]="reservation.session.startAt">
+                    {{ formatDate(reservation.session.startAt) }}
+                  </time>
+                </span>
+                <span>
+                  <app-icon name="user" />
+                  Coach {{ reservation.session.coach.firstname }} {{ reservation.session.coach.lastname }}
+                </span>
+              </div>
+            }
+          </div>
+
+          @if (reservation.status === 'CONFIRMED' && reservation.session && !isPast(reservation.session.startAt)) {
+            <button
+              class="btn btn--danger btn--sm"
+              (click)="cancel(reservation)"
+              [disabled]="cancellingId() === reservation.id"
+              [attr.aria-label]="'Annuler la réservation pour ' + reservation.session!.title"
+            >
+              @if (cancellingId() === reservation.id) { Annulation... } @else { Annuler }
+            </button>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

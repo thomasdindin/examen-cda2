@@ -1,0 +1,119 @@
+<div class="page page--narrow">
+  <header class="page-header">
+    <h1 class="page-title">
+      @if (isEdit()) { Modifier la <span>séance</span> } @else { Nouvelle <span>séance</span> }
+    </h1>
+    <p class="page-subtitle">
+      @if (isEdit()) { Mettez à jour les informations de la séance } @else { Planifiez une nouvelle session de sport }
+    </p>
+  </header>
+
+  @if (loadingSession()) {
+    <div class="loading" aria-label="Chargement de la séance">Chargement...</div>
+  } @else {
+    @if (error()) {
+      <div class="alert alert--error" role="alert" aria-live="polite" style="margin-bottom: 1.5rem">
+        {{ error() }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="session-form" aria-label="Formulaire de séance">
+      <div class="form-group">
+        <label for="title" class="form-label">Titre *</label>
+        <input
+          id="title"
+          type="text"
+          class="form-input"
+          formControlName="title"
+          placeholder="Ex: Coaching musculation"
+          [attr.aria-invalid]="isInvalid('title')"
+          aria-describedby="title-error"
+        />
+        @if (isInvalid('title')) {
+          <span id="title-error" class="form-error" role="alert">Titre requis (100 caractères max)</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-input"
+          formControlName="description"
+          placeholder="Décrivez le contenu de la séance..."
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startAt" class="form-label">Début *</label>
+          <input
+            id="startAt"
+            type="datetime-local"
+            class="form-input"
+            formControlName="startAt"
+            [attr.aria-invalid]="isInvalid('startAt')"
+            aria-describedby="startAt-error"
+          />
+          @if (isInvalid('startAt')) {
+            <span id="startAt-error" class="form-error" role="alert">Date de début requise</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="endAt" class="form-label">Fin *</label>
+          <input
+            id="endAt"
+            type="datetime-local"
+            class="form-input"
+            formControlName="endAt"
+            [attr.aria-invalid]="isInvalid('endAt')"
+            aria-describedby="endAt-error"
+          />
+          @if (isInvalid('endAt')) {
+            <span id="endAt-error" class="form-error" role="alert">Date de fin requise</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group participants-field">
+        <label for="maxParticipants" class="form-label">Participants max *</label>
+        <input
+          id="maxParticipants"
+          type="number"
+          class="form-input"
+          formControlName="maxParticipants"
+          min="1"
+          max="100"
+          [attr.aria-invalid]="isInvalid('maxParticipants')"
+          aria-describedby="maxParticipants-error"
+        />
+        @if (isInvalid('maxParticipants')) {
+          <span id="maxParticipants-error" class="form-error" role="alert">Entre 1 et 100</span>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary" [disabled]="loading()">
+          @if (loading()) { Enregistrement... }
+          @else if (isEdit()) { Mettre à jour }
+          @else { Créer la séance }
+        </button>
+
+        <a routerLink="/sessions" class="btn btn--ghost">Annuler</a>
+
+        @if (isEdit()) {
+          <button
+            type="button"
+            class="btn btn--danger delete-action"
+            (click)="delete()"
+            aria-label="Supprimer cette séance"
+          >
+            Supprimer
+          </button>
+        }
+      </div>
+    </form>
+  }
+</div>

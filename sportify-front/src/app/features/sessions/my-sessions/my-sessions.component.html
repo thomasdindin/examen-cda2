@@ -1,0 +1,105 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-row">
+      <div>
+        <h1 class="page-title">
+          @if (isAdmin()) { Toutes les <span>séances</span> } @else { Mes <span>séances</span> }
+        </h1>
+        <p class="page-subtitle">Gérez et suivez vos sessions planifiées</p>
+      </div>
+      <a routerLink="/sessions/new" class="btn btn--primary">+ Nouvelle séance</a>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert" aria-live="polite" style="margin-bottom: 1.5rem">
+      {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading" aria-label="Chargement des séances">Chargement...</div>
+  } @else if (mySessions().length === 0) {
+    <div class="empty-state" role="status">
+      <app-icon name="calendar" class="empty-icon" />
+      <p>Aucune séance créée pour l'instant.</p>
+      <a routerLink="/sessions/new" class="btn btn--primary" style="margin-top: 1rem">Créer ma première séance</a>
+    </div>
+  } @else {
+    <div class="table-wrapper" role="region" aria-label="Mes séances">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Titre</th>
+            @if (isAdmin()) { <th scope="col">Coach</th> }
+            <th scope="col">Début</th>
+            <th scope="col">Participants</th>
+            <th scope="col">Taux</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of mySessions(); track session.id) {
+            <tr [class.row--past]="isPast(session.startAt)">
+              <td>
+                <span class="session-title">{{ session.title }}</span>
+                @if (session.description) {
+                  <span class="session-desc">{{ session.description }}</span>
+                }
+              </td>
+              @if (isAdmin()) {
+                <td>{{ session.coach.firstname }} {{ session.coach.lastname }}</td>
+              }
+              <td>
+                <time [attr.datetime]="session.startAt">{{ formatDate(session.startAt) }}</time>
+              </td>
+              <td>
+                <span [class.text-full]="session.availablePlaces === 0">
+                  {{ session.reservedPlaces }} / {{ session.maxParticipants }}
+                </span>
+              </td>
+              <td>
+                <div class="fill-pill" [attr.aria-label]="'Taux ' + fillRate(session) + '%'">
+                  <div class="fill-pill__bar">
+                    <div
+                      class="fill-pill__inner"
+                      [style.width.%]="fillRate(session)"
+                      [class.fill-pill__inner--full]="fillRate(session) === 100"
+                    ></div>
+                  </div>
+                  <span>{{ fillRate(session) }}%</span>
+                </div>
+              </td>
+              <td>
+                <div class="actions-cell">
+                  <a
+                    [routerLink]="['/sessions', session.id, 'participants']"
+                    class="btn btn--ghost btn--sm"
+                    [attr.aria-label]="'Voir les participants de ' + session.title"
+                  >
+                    Participants
+                  </a>
+                  <a
+                    [routerLink]="['/sessions', session.id, 'edit']"
+                    class="btn btn--secondary btn--sm"
+                    [attr.aria-label]="'Modifier ' + session.title"
+                  >
+                    Modifier
+                  </a>
+                  <button
+                    class="btn btn--danger btn--sm"
+                    (click)="delete(session)"
+                    [disabled]="deletingId() === session.id"
+                    [attr.aria-label]="'Supprimer ' + session.title"
+                  >
+                    @if (deletingId() === session.id) { ... } @else { Supprimer }
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
