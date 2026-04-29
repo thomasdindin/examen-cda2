@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { AdminService } from '../../core/services/admin.service';
@@ -18,7 +17,7 @@ interface ChartItem {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, NgOptimizedImage],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -42,11 +41,9 @@ export class DashboardComponent implements OnInit {
   readonly users = signal<User[]>([]);
   readonly coachStudents = signal<User[]>([]);
 
-  readonly isLoggedIn = computed(() => this.auth.isLoggedIn());
   readonly isClient = computed(() => this.auth.hasRole('CLIENT'));
   readonly isCoach = computed(() => this.auth.hasRole('COACH'));
   readonly isAdmin = computed(() => this.auth.hasRole('ADMIN'));
-  readonly isGuest = computed(() => !this.auth.isLoggedIn());
 
   readonly upcomingSessions = computed(() =>
     this.sessions()
@@ -147,16 +144,10 @@ export class DashboardComponent implements OnInit {
   );
 
   ngOnInit() {
-    if (this.isGuest()) {
-      this.loading.set(false);
-      return;
-    }
-
     if (this.isAdmin()) {
       this.loadAdminDashboard();
       return;
     }
-
     this.loadSessionsDashboard();
   }
 

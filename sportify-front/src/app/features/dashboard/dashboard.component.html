@@ -1,46 +1,35 @@
 <div class="dashboard-page">
-  <section class="dashboard-hero" aria-labelledby="dashboard-title">
 
-    <div class="hero-content">
-      <p class="eyebrow">Sportify Pro</p>
-      <h1 id="dashboard-title">
-        @if (isLoggedIn()) {
-          Bonjour {{ currentUser()?.firstname }}, voici votre activité.
-        } @else {
-          Organisez vos séances sportives sans friction.
-        }
+  <header class="dash-header">
+    <div class="dash-header-text">
+      <p class="eyebrow">
+        @if (isAdmin()) { Administration }
+        @else if (isCoach()) { Espace coach }
+        @else { Mon espace }
+      </p>
+      <h1 class="page-title">
+        Bonjour <span>{{ currentUser()?.firstname }}</span>
       </h1>
-      <p class="hero-copy">
+      <p class="page-subtitle">
         @if (isAdmin()) {
           Vue globale des utilisateurs, réservations et taux de remplissage.
         } @else if (isCoach()) {
           Suivi direct de vos élèves et de vos prochaines séances.
-        } @else if (isClient()) {
-          Vos séances du jour, vos prochaines réservations et les places encore disponibles.
         } @else {
-          Sportify Pro centralise les cours, les coachs, les réservations et le suivi des participants dans une interface claire.
+          Vos séances du jour, vos prochaines réservations et les places encore disponibles.
         }
       </p>
-
-      <div class="hero-actions" aria-label="Actions principales">
-        @if (isClient()) {
-          <a routerLink="/sessions" class="btn btn--primary">Réserver une séance</a>
-          <a routerLink="/my-reservations" class="btn btn--secondary">Mes réservations</a>
-        } @else if (isCoach() || isAdmin()) {
-          <a routerLink="/sessions/new" class="btn btn--primary">Créer une séance</a>
-          <a routerLink="/my-sessions" class="btn btn--secondary">Gérer les séances</a>
-        } @else {
-          <a routerLink="/login" class="btn btn--primary">Se connecter</a>
-          <a routerLink="/register" class="btn btn--secondary">Créer un compte</a>
-        }
-      </div>
     </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <img ngSrc="/hero.png" alt="" fill priority />
+    <div class="dash-header-actions">
+      @if (isClient()) {
+        <a routerLink="/sessions" class="btn btn--primary">Réserver une séance</a>
+        <a routerLink="/my-reservations" class="btn btn--secondary">Mes réservations</a>
+      } @else if (isCoach() || isAdmin()) {
+        <a routerLink="/sessions/new" class="btn btn--primary">Créer une séance</a>
+        <a routerLink="/my-sessions" class="btn btn--secondary">Gérer les séances</a>
+      }
     </div>
-
-  </section>
+  </header>
 
   @if (successMessage()) {
     <div class="alert alert--success" role="alert" aria-live="polite">
@@ -57,34 +46,7 @@
   @if (loading()) {
     <div class="loading" aria-label="Chargement du tableau de bord">Chargement...</div>
   } @else {
-    @if (isGuest()) {
-      <section class="guest-grid" aria-label="Présentation de Sportify Pro">
-        <article class="panel panel--wide guest-main">
-          <span class="date-chip">Pour les salles, coachs et pratiquants</span>
-          <h2>Un espace unique pour publier, réserver et suivre les séances.</h2>
-          <p>
-            Les clients trouvent les créneaux disponibles, les coachs suivent leurs élèves, et les administrateurs gardent une vue claire sur l'activité.
-          </p>
-          <div class="guest-actions">
-            <a routerLink="/register" class="btn btn--primary">Démarrer</a>
-            <a routerLink="/sessions" class="btn btn--ghost">Voir les séances</a>
-          </div>
-        </article>
-
-        <article class="panel guest-card">
-          <h3>Clients</h3>
-          <p>Réservez vos prochaines séances, retrouvez votre planning et gardez vos confirmations au même endroit.</p>
-        </article>
-        <article class="panel guest-card">
-          <h3>Coachs</h3>
-          <p>Consultez vos élèves, préparez les séances du jour et suivez le remplissage de vos créneaux.</p>
-        </article>
-        <article class="panel guest-card">
-          <h3>Administrateurs</h3>
-          <p>Pilotez les utilisateurs, les réservations et l'activité globale avec des indicateurs rapides.</p>
-        </article>
-      </section>
-    } @else if (isAdmin()) {
+    @if (isAdmin()) {
       <section class="metrics-grid" aria-label="Indicateurs administrateur">
         <article class="metric-card">
           <span>Utilisateurs</span>
@@ -303,4 +265,5 @@
       </section>
     }
   }
+
 </div>

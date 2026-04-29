@@ -8,8 +8,18 @@ import { AuthService } from './core/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <header class="navbar" role="banner">
-      <a routerLink="/dashboard" class="brand" aria-label="Sportify Pro accueil" (click)="closeMenu()">
-        <span class="brand-icon" aria-hidden="true">S</span>
+      <a [routerLink]="isLoggedIn() ? '/dashboard' : '/'" class="brand" aria-label="Sportify Pro accueil" (click)="closeMenu()">
+        <svg class="brand-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="sp-bg" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2a0d1a"/>
+              <stop offset="100%" stop-color="#0e0a0c"/>
+            </linearGradient>
+          </defs>
+          <rect width="28" height="28" rx="7" fill="url(#sp-bg)"/>
+          <path d="M17 4L8 16L13 16L11 24L20 12L14 12Z" fill="#e11d48"/>
+          <path d="M17 4L8 16L10 16Z" fill="#f43f5e" opacity="0.4"/>
+        </svg>
         <span class="brand-name">SPORTIFY</span>
         <span class="brand-pro">PRO</span>
       </a>
@@ -29,7 +39,9 @@ import { AuthService } from './core/services/auth.service';
 
       <div id="main-navigation" class="nav-panel" [class.nav-panel--open]="isMenuOpen()">
         <nav class="nav-links" role="navigation" aria-label="Navigation principale">
-          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Dashboard</a>
+          @if (isLoggedIn()) {
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Dashboard</a>
+          }
           <a routerLink="/sessions" routerLinkActive="active" class="nav-link" (click)="closeMenu()">Séances</a>
 
           @if (isClient()) {
@@ -62,7 +74,7 @@ import { AuthService } from './core/services/auth.service';
       </div>
     </header>
 
-    <main class="main-content" id="main-content" tabindex="-1">
+    <main class="main-content" id="main-content" tabindex="-1" [class.has-texture]="isLoggedIn()">
       <router-outlet />
     </main>
   `,

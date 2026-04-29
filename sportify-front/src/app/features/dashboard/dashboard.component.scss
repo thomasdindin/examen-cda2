@@ -1,79 +1,37 @@
 .dashboard-page {
   width: min(1180px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 2.5rem 0 3rem;
 }
 
-// ── Hero ──────────────────────────────────────────────────────────────────────
+// ── Header ────────────────────────────────────────────────────────────────────
 
-.dashboard-hero {
-  display: grid;
-  grid-template-columns: 1fr 440px;
-  align-items: stretch;
-  gap: 3rem;
-  padding: 2.5rem 0 2rem;
+.dash-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  margin-bottom: 0.5rem;
   border-bottom: 1px solid var(--border);
 }
 
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0;
-  padding: 0.5rem 0;
-}
-
-.hero-visual {
-  position: relative;
-  min-height: 300px;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-
-  // gradient: fondu à gauche pour coller au fond de page
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to right, var(--bg) 0%, transparent 35%),
-      linear-gradient(to top, rgba(11, 10, 10, 0.55) 0%, transparent 28%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  img {
-    object-fit: cover;
-    object-position: center top;
-    filter: brightness(0.82) saturate(0.88);
+.dash-header-text {
+  .eyebrow {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 }
 
-.eyebrow {
-  color: var(--accent);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.dashboard-hero h1 {
-  margin-top: 0.35rem;
-  font-family: var(--font-display);
-  font-size: 4.5rem;
-  font-weight: 800;
-  line-height: 0.98;
-}
-
-.hero-copy {
-  margin-top: 1rem;
-  color: var(--text-secondary);
-}
-
-.hero-actions {
+.dash-header-actions {
   display: flex;
   gap: 0.75rem;
+  flex-shrink: 0;
   flex-wrap: wrap;
-  margin-top: 1.75rem;
+  justify-content: flex-end;
 }
 
 // ── Alerts ────────────────────────────────────────────────────────────────────
@@ -152,13 +110,6 @@
   gap: 1rem;
 }
 
-.guest-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
 // ── Panels ────────────────────────────────────────────────────────────────────
 
 .panel {
@@ -172,35 +123,6 @@
 
 .panel--wide {
   grid-column: 1 / -1;
-}
-
-.guest-main {
-  h2 {
-    max-width: 720px;
-    margin-top: 0.9rem;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    line-height: 1.05;
-  }
-}
-
-.guest-card {
-  p {
-    margin-top: 0.6rem;
-    color: var(--text-secondary);
-  }
-
-  h3 {
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-  }
-}
-
-.guest-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1.25rem;
 }
 
 .panel-header {
@@ -367,33 +289,19 @@
 
 // ── Responsive ────────────────────────────────────────────────────────────────
 
-@media (max-width: 1000px) {
-  .dashboard-hero {
-    grid-template-columns: 1fr 340px;
-    gap: 2rem;
+@media (max-width: 900px) {
+  .dash-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .dashboard-hero h1 {
-    font-size: 3.5rem;
+  .dash-header-actions {
+    justify-content: flex-start;
   }
 }
 
 @media (max-width: 780px) {
-  .dashboard-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-visual {
-    display: none;
-  }
-
-  .dashboard-hero h1 {
-    font-size: 3rem;
-  }
-
-  .dashboard-grid,
-  .guest-grid,
-  .booking-grid {
+  .dashboard-grid {
     grid-template-columns: 1fr;
   }
 
@@ -405,22 +313,13 @@
     grid-template-columns: 1fr;
     gap: 0.25rem;
   }
+
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 560px) {
-  .dashboard-page {
-    width: min(100% - 1rem, 1180px);
-    padding-top: 1rem;
-  }
-
-  .dashboard-hero {
-    padding-top: 1rem;
-  }
-
-  .dashboard-hero h1 {
-    font-size: 2.35rem;
-  }
-
   .metrics-grid {
     grid-template-columns: 1fr;
   }

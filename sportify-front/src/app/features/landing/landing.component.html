@@ -1,0 +1,62 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true">
+    <img ngSrc="/hero.png" alt="" fill priority />
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-body">
+    <p class="eyebrow">Sportify Pro</p>
+    <h1 id="hero-title">
+      Organisez vos<br>
+      séances sportives<br>
+      <span>sans friction.</span>
+    </h1>
+    <p class="hero-tagline">
+      La plateforme qui relie coachs, clients et administrateurs dans une interface unifiée.
+    </p>
+    <div class="hero-cta">
+      <a routerLink="/register" class="btn btn--primary">Commencer</a>
+      <a routerLink="/sessions" class="btn btn--ghost">Parcourir les séances</a>
+    </div>
+    <a routerLink="/login" class="hero-login-link">Déjà inscrit ? Se connecter →</a>
+  </div>
+
+  <div class="hero-scroll" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </div>
+</section>
+
+<section class="features" aria-label="Fonctionnalités">
+  <div class="features-inner">
+    <header class="features-header">
+      <p class="eyebrow">Conçu pour tous</p>
+      <h2>Une interface, trois usages</h2>
+      <p class="features-sub">Que vous soyez client, coach ou administrateur, Sportify Pro s'adapte à votre rôle.</p>
+    </header>
+
+    <div class="features-grid">
+      <article class="feature-card">
+        <p class="feature-num">01</p>
+        <h3>Clients</h3>
+        <p>Parcourez les créneaux disponibles, réservez en un clic et gérez vos séances depuis votre espace personnel.</p>
+      </article>
+      <article class="feature-card feature-card--accent">
+        <p class="feature-num">02</p>
+        <h3>Coachs</h3>
+        <p>Créez et gérez vos séances, suivez la progression de vos élèves et visualisez vos taux de remplissage en temps réel.</p>
+      </article>
+      <article class="feature-card">
+        <p class="feature-num">03</p>
+        <h3>Administrateurs</h3>
+        <p>Supervisez l'ensemble des utilisateurs et réservations depuis un tableau de bord avec indicateurs clés.</p>
+      </article>
+    </div>
+
+    <div class="features-cta">
+      <a routerLink="/register" class="btn btn--primary">Créer un compte</a>
+      <a routerLink="/login" class="btn btn--ghost">Se connecter</a>
+    </div>
+  </div>
+</section>
