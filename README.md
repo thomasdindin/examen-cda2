@@ -4,7 +4,7 @@ Sportify Pro est une application de gestion de seances de coaching sportif. Elle
 
 ## Code source
 
-- Depot GitHub : `https://github.com/votre-compte/sportify-pro` (lien a remplacer par le depot reel).
+- Depot GitHub : `[ici](https://github.com/thomasdindin/examen-cda2/)` (lien a remplacer par le depot reel).
 - Backend : `sportify-api/`, API NestJS avec Prisma et PostgreSQL.
 - Frontend : `sportify-front/`, application Angular responsive.
 - README : present a la racine du livrable.
