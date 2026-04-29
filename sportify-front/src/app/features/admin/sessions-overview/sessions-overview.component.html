@@ -1,0 +1,85 @@
+<div class="page">
+  <header class="page-header">
+    <div class="admin-nav">
+      <h1 class="page-title">Admin <span>Séances</span></h1>
+      <nav aria-label="Navigation admin">
+        <a routerLink="/admin/users" routerLinkActive="active" class="admin-tab">Utilisateurs</a>
+        <a routerLink="/admin/sessions" routerLinkActive="active" class="admin-tab">Séances</a>
+      </nav>
+    </div>
+    <p class="page-subtitle">Supervision de toutes les séances et leur taux de remplissage</p>
+  </header>
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert" aria-live="polite" style="margin-bottom: 1.5rem">
+      {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading" aria-label="Chargement des séances">Chargement...</div>
+  } @else if (sessions().length === 0) {
+    <div class="empty-state" role="status">
+      <app-icon name="calendar" class="empty-icon" />
+      <p>Aucune séance.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper" role="region" aria-label="Supervision des séances">
+      <table class="table" aria-label="Séances">
+        <thead>
+          <tr>
+            <th scope="col">Titre</th>
+            <th scope="col">Coach</th>
+            <th scope="col">Début</th>
+            <th scope="col">Fin</th>
+            <th scope="col">Participants</th>
+            <th scope="col">Taux</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (session of sessions(); track session.id) {
+            <tr [class.row--past]="isPast(session.startAt)">
+              <td>
+                <span class="session-title">{{ session.title }}</span>
+              </td>
+              <td>{{ session.coach.firstname }} {{ session.coach.lastname }}</td>
+              <td>
+                <time [attr.datetime]="session.startAt">{{ formatDate(session.startAt) }}</time>
+              </td>
+              <td>
+                <time [attr.datetime]="session.endAt">{{ formatDate(session.endAt) }}</time>
+              </td>
+              <td>
+                <span [class.text-full]="session.availablePlaces === 0">
+                  {{ session.reservedPlaces }} / {{ session.maxParticipants }}
+                </span>
+              </td>
+              <td>
+                <div class="fill-bar" [attr.aria-label]="'Taux de remplissage : ' + fillRate(session) + '%'">
+                  <div class="fill-bar__track">
+                    <div
+                      class="fill-bar__inner"
+                      [style.width.%]="fillRate(session)"
+                      [class.fill-bar__inner--full]="fillRate(session) === 100"
+                    ></div>
+                  </div>
+                  <span class="fill-bar__label">{{ fillRate(session) }}%</span>
+                </div>
+              </td>
+              <td>
+                <a
+                  [routerLink]="['/sessions', session.id, 'edit']"
+                  class="btn btn--ghost btn--sm"
+                  [attr.aria-label]="'Modifier la séance ' + session.title"
+                >
+                  Modifier
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

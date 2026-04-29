@@ -1,0 +1,300 @@
+<div class="dashboard-page">
+  <section class="dashboard-hero" aria-labelledby="dashboard-title">
+    <div>
+      <p class="eyebrow">Sportify Pro</p>
+      <h1 id="dashboard-title">
+        @if (isLoggedIn()) {
+          Bonjour {{ currentUser()?.firstname }}, voici votre activité.
+        } @else {
+          Organisez vos séances sportives sans friction.
+        }
+      </h1>
+      <p class="hero-copy">
+        @if (isAdmin()) {
+          Vue globale des utilisateurs, réservations et taux de remplissage.
+        } @else if (isCoach()) {
+          Suivi direct de vos élèves et de vos prochaines séances.
+        } @else if (isClient()) {
+          Vos séances du jour, vos prochaines réservations et les places encore disponibles.
+        } @else {
+          Sportify Pro centralise les cours, les coachs, les réservations et le suivi des participants dans une interface claire.
+        }
+      </p>
+    </div>
+
+    <div class="hero-actions" aria-label="Actions principales">
+      @if (isClient()) {
+        <a routerLink="/sessions" class="btn btn--primary">Réserver une séance</a>
+        <a routerLink="/my-reservations" class="btn btn--secondary">Mes réservations</a>
+      } @else if (isCoach() || isAdmin()) {
+        <a routerLink="/sessions/new" class="btn btn--primary">Créer une séance</a>
+        <a routerLink="/my-sessions" class="btn btn--secondary">Gérer les séances</a>
+      } @else {
+        <a routerLink="/login" class="btn btn--primary">Se connecter</a>
+        <a routerLink="/register" class="btn btn--secondary">Créer un compte</a>
+      }
+    </div>
+  </section>
+
+  @if (successMessage()) {
+    <div class="alert alert--success" role="alert" aria-live="polite">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert--error" role="alert" aria-live="polite">
+      {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading" aria-label="Chargement du tableau de bord">Chargement...</div>
+  } @else {
+    @if (isGuest()) {
+      <section class="guest-grid" aria-label="Présentation de Sportify Pro">
+        <article class="panel panel--wide guest-main">
+          <span class="date-chip">Pour les salles, coachs et pratiquants</span>
+          <h2>Un espace unique pour publier, réserver et suivre les séances.</h2>
+          <p>
+            Les clients trouvent les créneaux disponibles, les coachs suivent leurs élèves, et les administrateurs gardent une vue claire sur l’activité.
+          </p>
+          <div class="guest-actions">
+            <a routerLink="/register" class="btn btn--primary">Démarrer</a>
+            <a routerLink="/sessions" class="btn btn--ghost">Voir les séances</a>
+          </div>
+        </article>
+
+        <article class="panel guest-card">
+          <h3>Clients</h3>
+          <p>Réservez vos prochaines séances, retrouvez votre planning et gardez vos confirmations au même endroit.</p>
+        </article>
+        <article class="panel guest-card">
+          <h3>Coachs</h3>
+          <p>Consultez vos élèves, préparez les séances du jour et suivez le remplissage de vos créneaux.</p>
+        </article>
+        <article class="panel guest-card">
+          <h3>Administrateurs</h3>
+          <p>Pilotez les utilisateurs, les réservations et l’activité globale avec des indicateurs rapides.</p>
+        </article>
+      </section>
+    } @else if (isAdmin()) {
+      <section class="metrics-grid" aria-label="Indicateurs administrateur">
+        <article class="metric-card">
+          <span>Utilisateurs</span>
+          <strong>{{ adminStats().users }}</strong>
+          <small>{{ adminStats().clients }} clients · {{ adminStats().coaches }} coachs</small>
+        </article>
+        <article class="metric-card">
+          <span>Réservations</span>
+          <strong>{{ adminStats().reservations }}</strong>
+          <small>confirmées au total</small>
+        </article>
+        <article class="metric-card">
+          <span>Séances à venir</span>
+          <strong>{{ adminStats().upcomingSessions }}</strong>
+          <small>{{ adminStats().todaySessions }} aujourd'hui</small>
+        </article>
+        <article class="metric-card metric-card--accent">
+          <span>Remplissage</span>
+          <strong>{{ adminStats().fillRate }}%</strong>
+          <small>capacité réservée</small>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Répartition utilisateurs</h2>
+            <a routerLink="/admin/users">Voir tout</a>
+          </div>
+          <div class="chart-list" aria-label="Répartition des rôles">
+            @for (item of roleChart(); track item.label) {
+              <div class="chart-row">
+                <div class="chart-row__label">
+                  <span>{{ item.label }}</span>
+                  <strong>{{ item.value }}</strong>
+                </div>
+                <div class="chart-bar" [attr.aria-label]="item.label + ' ' + item.percent + '%'">
+                  <span [style.width.%]="item.percent"></span>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Remplissage des prochaines séances</h2>
+            <a routerLink="/admin/sessions">Superviser</a>
+          </div>
+          <div class="chart-list" aria-label="Taux de remplissage">
+            @for (item of capacityChart(); track item.label) {
+              <div class="chart-row">
+                <div class="chart-row__label">
+                  <span>{{ item.label }}</span>
+                  <strong>{{ item.percent }}%</strong>
+                </div>
+                <div class="chart-bar chart-bar--red" [attr.aria-label]="item.label + ' ' + item.percent + '%'">
+                  <span [style.width.%]="item.percent"></span>
+                </div>
+              </div>
+            } @empty {
+              <p class="empty-inline">Aucune séance à venir.</p>
+            }
+          </div>
+        </article>
+      </section>
+    } @else if (isCoach()) {
+      <section class="metrics-grid" aria-label="Indicateurs coach">
+        <article class="metric-card">
+          <span>Élèves uniques</span>
+          <strong>{{ coachStudents().length }}</strong>
+          <small>{{ totalCoachStudents() }} inscriptions cumulées</small>
+        </article>
+        <article class="metric-card">
+          <span>Aujourd'hui</span>
+          <strong>{{ coachTodaySessions().length }}</strong>
+          <small>séances au planning</small>
+        </article>
+        <article class="metric-card metric-card--accent">
+          <span>À venir</span>
+          <strong>{{ coachUpcomingSessions().length }}</strong>
+          <small>prochaines séances</small>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Élèves</h2>
+            <a routerLink="/my-sessions">Participants</a>
+          </div>
+          <ul class="student-list" aria-label="Élèves du coach">
+            @for (student of coachStudents().slice(0, 6); track student.id) {
+              <li>
+                <span class="avatar">{{ student.firstname.charAt(0) }}{{ student.lastname.charAt(0) }}</span>
+                <div>
+                  <strong>{{ student.firstname }} {{ student.lastname }}</strong>
+                  <small>{{ student.email }}</small>
+                </div>
+              </li>
+            } @empty {
+              <li class="empty-line">Aucun élève inscrit pour le moment.</li>
+            }
+          </ul>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Séances du jour</h2>
+            <a routerLink="/sessions/new">Ajouter</a>
+          </div>
+          <div class="session-stack">
+            @for (session of coachTodaySessions(); track session.id) {
+              <article class="mini-session">
+                <div>
+                  <strong>{{ session.title }}</strong>
+                  <span>{{ formatTime(session.startAt) }} · {{ session.reservedPlaces }}/{{ session.maxParticipants }} élèves</span>
+                </div>
+                <a [routerLink]="['/sessions', session.id, 'participants']">Voir</a>
+              </article>
+            } @empty {
+              <p class="empty-inline">Aucune séance aujourd'hui.</p>
+            }
+          </div>
+        </article>
+
+        <article class="panel panel--wide">
+          <div class="panel-header">
+            <h2>Prochaines séances</h2>
+            <a routerLink="/my-sessions">Tout gérer</a>
+          </div>
+          <div class="timeline-list">
+            @for (session of coachUpcomingSessions(); track session.id) {
+              <article class="timeline-item">
+                <time [attr.datetime]="session.startAt">{{ formatDate(session.startAt) }}</time>
+                <strong>{{ session.title }}</strong>
+                <span>{{ session.reservedPlaces }}/{{ session.maxParticipants }} participants</span>
+              </article>
+            } @empty {
+              <p class="empty-inline">Aucune séance programmée.</p>
+            }
+          </div>
+        </article>
+      </section>
+    } @else if (isClient()) {
+      <section class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h2>Séances du jour</h2>
+            <a routerLink="/sessions">Catalogue</a>
+          </div>
+          <div class="session-stack">
+            @for (reservation of clientTodayReservations(); track reservation.id) {
+              @if (reservation.session) {
+                <article class="mini-session">
+                  <div>
+                    <strong>{{ reservation.session.title }}</strong>
+                    <span>{{ formatTime(reservation.session.startAt) }} · Coach {{ reservation.session.coach.firstname }}</span>
+                  </div>
+                  <span class="status-pill">Réservée</span>
+                </article>
+              }
+            } @empty {
+              <p class="empty-inline">Aucune réservation aujourd'hui.</p>
+            }
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <h2>À venir</h2>
+            <a routerLink="/my-reservations">Mes réservations</a>
+          </div>
+          <div class="timeline-list">
+            @for (reservation of clientUpcomingReservations(); track reservation.id) {
+              @if (reservation.session) {
+                <article class="timeline-item">
+                  <time [attr.datetime]="reservation.session.startAt">{{ formatDate(reservation.session.startAt) }}</time>
+                  <strong>{{ reservation.session.title }}</strong>
+                  <span>Coach {{ reservation.session.coach.firstname }} {{ reservation.session.coach.lastname }}</span>
+                </article>
+              }
+            } @empty {
+              <p class="empty-inline">Aucune réservation à venir.</p>
+            }
+          </div>
+        </article>
+
+        <article class="panel panel--wide">
+          <div class="panel-header">
+            <h2>Places disponibles</h2>
+            <a routerLink="/sessions">Voir toutes les séances</a>
+          </div>
+          <div class="booking-grid">
+            @for (session of bookableSessions(); track session.id) {
+              <article class="booking-card">
+                <div>
+                  <span class="date-chip">{{ formatDate(session.startAt) }}</span>
+                  <h3>{{ session.title }}</h3>
+                  <p>Coach {{ session.coach.firstname }} {{ session.coach.lastname }}</p>
+                </div>
+                <button
+                  class="btn btn--primary btn--sm"
+                  type="button"
+                  [disabled]="reservingId() === session.id"
+                  (click)="reserve(session)"
+                >
+                  @if (reservingId() === session.id) { Réservation... } @else { Réserver }
+                </button>
+              </article>
+            } @empty {
+              <p class="empty-inline">Aucune place disponible actuellement.</p>
+            }
+          </div>
+        </article>
+      </section>
+    }
+  }
+</div>

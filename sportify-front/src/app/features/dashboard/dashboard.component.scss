@@ -1,0 +1,372 @@
+.dashboard-page {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.dashboard-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dashboard-hero h1 {
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 0.98;
+}
+
+.hero-copy {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.alert {
+  margin-top: 1rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.metric-card,
+.panel,
+.booking-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.metric-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: space-between;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  small {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  strong {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  &--accent {
+    border-color: rgba(225, 29, 72, 0.35);
+    background: linear-gradient(145deg, rgba(225, 29, 72, 0.14) 0%, var(--surface-elevated) 55%);
+
+    strong {
+      color: var(--accent);
+    }
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.guest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.panel {
+  padding: 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+}
+
+.panel--wide {
+  grid-column: 1 / -1;
+}
+
+.guest-main {
+  h2 {
+    max-width: 720px;
+    margin-top: 0.9rem;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1.05;
+  }
+}
+
+.guest-card {
+  p {
+    margin-top: 0.6rem;
+    color: var(--text-secondary);
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+  }
+}
+
+.guest-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+  }
+
+  a {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}
+
+.chart-list,
+.session-stack,
+.timeline-list,
+.student-list,
+.booking-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.chart-row {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.chart-row__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+
+  strong {
+    color: var(--text-primary);
+  }
+}
+
+.chart-bar {
+  height: 0.55rem;
+  background: var(--surface-3);
+  border-radius: 999px;
+  overflow: hidden;
+
+  span {
+    display: block;
+    height: 100%;
+    background: var(--warning);
+    border-radius: inherit;
+    transition: width 0.35s var(--ease);
+  }
+
+  &--red span {
+    background: var(--accent);
+  }
+}
+
+.student-list {
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.65rem;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+  }
+
+  small {
+    display: block;
+  }
+}
+
+.avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mini-session,
+.timeline-item,
+.booking-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+
+  strong {
+    display: block;
+  }
+
+  span,
+  time,
+  p {
+    font-size: 0.85rem;
+  }
+}
+
+.mini-session a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) auto;
+}
+
+.status-pill,
+.date-chip {
+  display: inline-flex;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.booking-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.booking-card {
+  align-items: flex-end;
+
+  h3 {
+    margin: 0.6rem 0 0.2rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+  }
+}
+
+.empty-inline,
+.empty-line {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-hero,
+  .dashboard-grid,
+  .guest-grid,
+  .booking-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    justify-content: flex-start;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 3rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .dashboard-page {
+    width: min(100% - 1rem, 1180px);
+    padding-top: 1rem;
+  }
+
+  .dashboard-hero {
+    padding-top: 1rem;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 2.35rem;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-session,
+  .booking-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
