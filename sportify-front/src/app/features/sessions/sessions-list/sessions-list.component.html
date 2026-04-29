@@ -1,0 +1,231 @@
+<div class="page">
+  <header class="page-header" animate.enter="fade-slide-in">
+    <div class="page-header__row">
+      <div>
+        <h1 class="page-title">Séances <span>disponibles</span></h1>
+        <p class="page-subtitle">Découvrez et réservez vos prochaines sessions de sport</p>
+      </div>
+      @if (isCoachOrAdmin()) {
+        <a routerLink="/sessions/new" class="btn btn--primary">+ Créer une séance</a>
+      }
+    </div>
+  </header>
+
+  <div class="filters" role="search" aria-label="Filtres de recherche" animate.enter="fade-slide-in">
+    <span class="filters__eyebrow" aria-hidden="true">Filtres</span>
+
+    <div class="filters__search">
+      <app-icon name="search" class="search-icon" aria-hidden="true" />
+      <label for="search-input" class="sr-only">Rechercher une séance</label>
+      <input
+        id="search-input"
+        type="search"
+        class="input search-input"
+        placeholder="Rechercher une séance..."
+        [value]="searchTerm()"
+        (input)="onSearch($event)"
+      />
+    </div>
+
+    <div class="filters__dates">
+      <div class="filters__date-group">
+        <label for="from-date" class="filter-label">Du</label>
+        <input
+          id="from-date"
+          type="date"
+          class="input input--date"
+          [value]="fromDate()"
+          (change)="onFromDateChange($event)"
+          aria-label="Date de début"
+        />
+      </div>
+
+      <div class="filters__date-group">
+        <label for="to-date" class="filter-label">Au</label>
+        <input
+          id="to-date"
+          type="date"
+          class="input input--date"
+          [value]="toDate()"
+          (change)="onToDateChange($event)"
+          aria-label="Date de fin"
+        />
+      </div>
+    </div>
+
+    @if (hasActiveFilters()) {
+      <button class="btn btn--ghost btn--sm filters__clear" type="button" (click)="clearFilters()">
+        <app-icon name="x" aria-hidden="true" />
+        Effacer
+      </button>
+    }
+  </div>
+
+  @if (successMessage()) {
+    <div
+      class="alert alert--success"
+      role="alert"
+      aria-live="polite"
+      style="margin-bottom: 1.5rem"
+      animate.enter="toast-enter"
+      animate.leave="toast-leave"
+    >
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (error()) {
+    <div
+      class="alert alert--error"
+      role="alert"
+      aria-live="polite"
+      style="margin-bottom: 1.5rem"
+      animate.enter="toast-enter"
+      animate.leave="toast-leave"
+    >
+      {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading" aria-label="Chargement des séances en cours" animate.enter="fade-in">Chargement...</div>
+  } @else if (sessions().length === 0) {
+    <div class="empty-state" role="status" animate.enter="fade-slide-in">
+      <app-icon name="dumbbell" class="empty-icon" />
+      <p>Aucune séance trouvée.</p>
+      @if (hasActiveFilters()) {
+        <button class="btn btn--ghost btn--sm" type="button" (click)="clearFilters()" style="margin-top: 1rem">
+          Effacer les filtres
+        </button>
+      }
+    </div>
+  } @else {
+    <p class="results-count" aria-live="polite" aria-atomic="true">
+      <strong>{{ total() }}</strong> séance{{ total() > 1 ? 's' : '' }} trouvée{{ total() > 1 ? 's' : '' }}
+    </p>
+
+    <ul class="grid grid--3" role="list" aria-label="Liste des séances">
+      @for (session of sessions(); track session.id) {
+        <li
+          class="session-card"
+          [class.session-card--past]="isPast(session)"
+          [class.session-card--full]="isFull(session)"
+          [class.session-card--reserved]="isReserved(session.id)"
+          animate.enter="card-enter"
+          animate.leave="card-leave"
+        >
+          <div class="session-card__header">
+            <h2 class="session-card__title">{{ session.title }}</h2>
+            @if (isPast(session)) {
+              <span class="badge" style="background: var(--surface-3); color: var(--text-muted)">Passée</span>
+            } @else if (isReserved(session.id)) {
+              <span class="badge badge--confirmed" animate.enter="chip-enter">Réservée</span>
+            } @else if (isFull(session)) {
+              <span class="badge badge--full">Complet</span>
+            } @else {
+              <span class="badge badge--confirmed">{{ session.availablePlaces }} place(s)</span>
+            }
+          </div>
+
+          @if (session.description) {
+            <p class="session-card__desc">{{ session.description }}</p>
+          }
+
+          <div class="session-card__meta">
+            <div class="meta-item">
+              <app-icon name="calendar" class="meta-icon" />
+              <time [attr.datetime]="session.startAt">{{ formatDate(session.startAt) }}</time>
+            </div>
+            <div class="meta-item">
+              <app-icon name="clock" class="meta-icon" />
+              <span>{{ formatDuration(session.startAt, session.endAt) }}</span>
+            </div>
+            <div class="meta-item">
+              <app-icon name="user" class="meta-icon" />
+              <span>{{ session.coach.firstname }} {{ session.coach.lastname }}</span>
+            </div>
+            <div class="meta-item">
+              <app-icon name="users" class="meta-icon" />
+              <span>{{ session.reservedPlaces }} / {{ session.maxParticipants }} participants</span>
+            </div>
+          </div>
+
+          <div class="session-card__footer">
+            @if (isClient() && !isPast(session) && !isReserved(session.id)) {
+              <button
+                class="btn btn--primary"
+                [disabled]="isFull(session) || reservingId() === session.id"
+                (click)="reserve(session)"
+                [attr.aria-label]="'Réserver la séance ' + session.title"
+                animate.enter="action-enter"
+                animate.leave="action-leave"
+              >
+                @if (reservingId() === session.id) { Réservation... } @else { Réserver }
+              </button>
+            }
+
+            @if (isClient() && !isPast(session) && isReserved(session.id)) {
+              <button
+                class="btn btn--danger"
+                type="button"
+                [disabled]="cancellingId() === session.id"
+                (click)="cancel(session)"
+                [attr.aria-label]="'Annuler la réservation pour ' + session.title"
+                animate.enter="action-enter"
+                animate.leave="action-leave"
+              >
+                @if (cancellingId() === session.id) { Annulation... } @else { Annuler }
+              </button>
+            }
+
+            @if (!isLoggedIn() && !isPast(session) && !isFull(session)) {
+              <a routerLink="/login" class="btn btn--ghost btn--sm">
+                Connexion pour réserver
+              </a>
+            }
+
+            @if (isCoachOrAdmin()) {
+              <a
+                [routerLink]="['/sessions', session.id, 'edit']"
+                class="btn btn--ghost btn--sm"
+                [attr.aria-label]="'Modifier la séance ' + session.title"
+              >
+                Modifier
+              </a>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+
+    @if (totalPages() > 1) {
+      <nav class="pagination" aria-label="Pagination des séances">
+        <button
+          class="btn btn--ghost btn--sm"
+          type="button"
+          [disabled]="page() === 1"
+          (click)="goToPage(page() - 1)"
+          aria-label="Page précédente"
+        >
+          <app-icon name="chevron-left" aria-hidden="true" />
+          Précédent
+        </button>
+
+        <span class="pagination__info" aria-live="polite" aria-atomic="true">
+          Page <strong>{{ page() }}</strong> / {{ totalPages() }}
+        </span>
+
+        <button
+          class="btn btn--ghost btn--sm"
+          type="button"
+          [disabled]="page() === totalPages()"
+          (click)="goToPage(page() + 1)"
+          aria-label="Page suivante"
+        >
+          Suivant
+          <app-icon name="chevron-right" aria-hidden="true" />
+        </button>
+      </nav>
+    }
+  }
+</div>
