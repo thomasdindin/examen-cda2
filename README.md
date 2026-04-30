@@ -71,7 +71,7 @@ npm start                   # http://localhost:4200 avec rechargement automatiqu
 
 ### Lancer les tests manuellement
 
-Backend (37 tests Jest) :
+Backend (29 tests Jest) :
 
 ```bash
 cd sportify-api

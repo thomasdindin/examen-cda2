@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Role } from '../common/enums/role.enum';
@@ -33,11 +37,13 @@ const mockPrisma = {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    count: jest.fn(),
   },
   reservation: {
     count: jest.fn(),
     findMany: jest.fn(),
   },
+  $transaction: jest.fn(),
 };
 
 describe('SessionsService', () => {
@@ -57,12 +63,13 @@ describe('SessionsService', () => {
 
   describe('findAll', () => {
     it('retourne les séances avec availablePlaces calculées', async () => {
-      mockPrisma.session.findMany.mockResolvedValue([mockSession]);
+      mockPrisma.$transaction.mockResolvedValue([[mockSession], 1]);
 
       const result = await service.findAll();
 
-      expect(result[0].reservedPlaces).toBe(2);
-      expect(result[0].availablePlaces).toBe(3);
+      expect(result.data[0].reservedPlaces).toBe(2);
+      expect(result.data[0].availablePlaces).toBe(3);
+      expect(result.meta.total).toBe(1);
     });
   });
 
@@ -106,6 +113,72 @@ describe('SessionsService', () => {
 
       await expect(service.findOne('inexistant')).rejects.toThrow(
         NotFoundException,
+      );
+    });
+  });
+
+  describe('update', () => {
+    it('met à jour une séance si le coach en est propriétaire', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue(mockSession);
+      mockPrisma.session.update.mockResolvedValue({
+        ...mockSession,
+        title: 'Modifié',
+      });
+
+      const result = await service.update(
+        'session-id',
+        { title: 'Modifié' },
+        coachUser,
+      );
+      expect(result.title).toBe('Modifié');
+    });
+
+    it("lève NotFoundException si la séance n'existe pas", async () => {
+      mockPrisma.session.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.update('inexistant', { title: 'Test' }, coachUser),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("lève ForbiddenException si l'utilisateur n'est pas propriétaire", async () => {
+      const otherCoach = {
+        sub: 'autre-coach',
+        email: 'autre@mail.com',
+        role: Role.COACH,
+      };
+      mockPrisma.session.findUnique.mockResolvedValue(mockSession);
+
+      await expect(
+        service.update('session-id', { title: 'Test' }, otherCoach),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('remove', () => {
+    it('supprime une séance sans réservations confirmées', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue(mockSession);
+      mockPrisma.reservation.count.mockResolvedValue(0);
+      mockPrisma.session.delete.mockResolvedValue(mockSession);
+
+      const result = await service.remove('session-id', coachUser);
+      expect(result.message).toBe('Séance supprimée.');
+    });
+
+    it("lève NotFoundException si la séance n'existe pas", async () => {
+      mockPrisma.session.findUnique.mockResolvedValue(null);
+
+      await expect(service.remove('inexistant', coachUser)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('lève BadRequestException si des réservations confirmées existent', async () => {
+      mockPrisma.session.findUnique.mockResolvedValue(mockSession);
+      mockPrisma.reservation.count.mockResolvedValue(3);
+
+      await expect(service.remove('session-id', coachUser)).rejects.toThrow(
+        BadRequestException,
       );
     });
   });

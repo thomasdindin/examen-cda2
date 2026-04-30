@@ -108,5 +108,43 @@ describe('AuthService', () => {
         service.login({ email: 'test@mail.com', password: 'WrongPassword!' }),
       ).rejects.toThrow(UnauthorizedException);
     });
+
+    it("lève UnauthorizedException si l'email n'existe pas", async () => {
+      mockUsersService.findByEmail.mockResolvedValue(null);
+
+      await expect(
+        service.login({ email: 'unknown@mail.com', password: 'Password123!' }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('lève UnauthorizedException si le compte est désactivé', async () => {
+      const hashedPwd = await bcrypt.hash('Password123!', 10);
+      mockUsersService.findByEmail.mockResolvedValue({
+        id: 'uuid-1',
+        email: 'test@mail.com',
+        password: hashedPwd,
+        enabled: false,
+      });
+
+      await expect(
+        service.login({ email: 'test@mail.com', password: 'Password123!' }),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('me', () => {
+    it("retourne le profil de l'utilisateur connecté", async () => {
+      mockUsersService.findById.mockResolvedValue({
+        id: 'uuid-1',
+        email: 'test@mail.com',
+        firstname: 'John',
+        lastname: 'Doe',
+        role: 'CLIENT',
+      });
+
+      const result = await service.me('uuid-1');
+      expect(result.id).toBe('uuid-1');
+      expect(mockUsersService.findById).toHaveBeenCalledWith('uuid-1');
+    });
   });
 });
