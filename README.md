@@ -5,6 +5,7 @@ Application de gestion de séances de coaching sportif. Un client peut consulter
 - **Backend** : `sportify-api/` — API REST NestJS 11, PostgreSQL 16, Prisma 6, JWT
 - **Frontend** : `sportify-front/` — Angular 21, composants standalone, signals
 
+![img.png](img.png)
 ---
 
 ## Démarrage rapide — Docker
